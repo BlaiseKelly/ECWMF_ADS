@@ -1,0 +1,65 @@
+---
+title: "Wildfire data from the ECMWF Atmosphere Data Store (ADS)"
+format: gfm
+  # docx:
+  #   toc: true
+  #   number-sections: true
+  #   highlight-style: github
+editor: source
+---
+
+```{r setup, include=FALSE}
+
+library(terra)
+library(dplyr)
+library(knitr)
+
+```
+
+To reproduce/run for own dowmin, must [register (for free!) with ecmwf](https://accounts.ecmwf.int/auth/realms/ecmwf/login-actions/registration?client_id=cds&tab_id=kWV0xKsufvs) get the API key after registration
+Open 01_download.R and drop in the API key, running the script will download netcdf (.nc files) to the data folder
+02_brick.R converts each one to raster bricks
+
+03_plot.R stacks all the bricks
+
+uses the function app in terra and base which.max to calculate the hour when each cell experienced the highest concentration. 
+
+![](plots/which_max.png)
+
+Plots a histogram of the frequencies from this
+
+```{r, echo = FALSE, warning=FALSE, error=FALSE}
+
+bs <- list.files("bricks", "pmwf_", full.names = TRUE)
+
+b <- rast(bs)
+
+# for each cell find the hour when the concentration was the highest
+wm <- app(b,which.max)
+
+# plot frequency of this
+hist(wm, main = "Raster Value Distribution")
+
+```
+
+Top 20 hours
+
+```{r, echo = FALSE, warning=FALSE, error=FALSE}
+
+# sort descending
+freq_table <- freq(wm) |> 
+  select(hour = value, count) |> 
+  arrange(desc(count)) |> 
+  slice(1:20)
+
+kable(freq_table)
+
+
+```
+
+Based on this can pick a period of interest.
+
+
+And plot it as an animation
+
+![](plots/wildfires.gif)
