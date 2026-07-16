@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>CAMS ADS</title>
+<title>North West Wildfires – ECMWF CAMS ADS Wildfire Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -83,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     </a>
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">CAMS ADS</span>
+    <span class="navbar-title">ECMWF CAMS ADS Wildfire Analysis</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -94,7 +94,15 @@ ul.task-list li input[type="checkbox"] {
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link active" href="./index.html" aria-current="page"> 
-<span class="menu-text">Home</span></a>
+<span class="menu-text">Modelled and Observed</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./pm10.html"> 
+<span class="menu-text">Total PM10</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./pmwf.html"> 
+<span class="menu-text">Wildfire PM10</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./about.html"> 
@@ -119,7 +127,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">CAMS ADS</h1>
+<h1 class="title">North West Wildfires</h1>
 </div>
 
 
@@ -136,8 +144,13 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This is a Quarto website.</p>
-<p>To learn more about Quarto websites visit <a href="https://quarto.org/docs/websites" class="uri">https://quarto.org/docs/websites</a>.</p>
+<p>The <a href="https://confluence.ecmwf.int/spaces/CKB/pages/228864840/CAMS+Regional+European+air+quality+reanalyses+data+documentation">Copernicus Atmosphere Monitoring Service (CAMS)</a>, publically available from the Atmospheric Data Store (ADS) pulls together 11 state of the art Chemistry Transport Models (CTM). An Ensemble Median of these models is also calculated. This data was downloaded using the ecmwfr R package for the period 12-07-2026 and 15-07-2026 has been plotted below for northern England. Also shown are the observation sites for this area from the local, aurn, saqn, waqn and aqe networks using the openair R package), coloured by the hourly mean concentrations.</p>
+<p><img src="plots/ensemble_pm10.gif" class="img-fluid"> One of the variables available from the ADS is PM10 wildfire concentrations. This is plotted below, also for the Ensemble Median. <img src="plots/ensemble_pmwf.gif" class="img-fluid"> A closer look at each of the background observation sites, plotting them all together for the same period in red, with the Ensemble Median shown as a black line.</p>
+<p><img src="plots/all_obs.png" class="img-fluid"> The location of the observation sites is shown below coloured by the hourly maximum. Some of the sites have recorded over 100ug/m3 hourly max concentrations.</p>
+<p><img src="plots/obs_sites.png" class="img-fluid"></p>
+<p>For these sites a more detailed plot is shown below, comparing the ensemble median of the models, observations along with temperature and humidity data for each site (obtained with the worldmet R package). You might expect a wildfire to produce a constant plume of smoke, but as the temperature drops and humidity rises each night the fires die down only to bounce back in the middle of the next day.</p>
+<p>The scales of these plots have been adjusted to the data, a closer look at the scales shows not only does the modelled concentration not match the profile but the magnitude is far lower, as is seen in the animation above.</p>
+<p><img src="plots/HELSB_tp.png" class="img-fluid"> <img src="plots/TRAN_tp.png" class="img-fluid"> <img src="plots/WAR_tp.png" class="img-fluid"> <img src="plots/MAN3_tp.png" class="img-fluid"> <img src="plots/ECCL_tp.png" class="img-fluid"> <img src="plots/LVPT_tp.png" class="img-fluid"> <img src="plots/WIG5_tp.png" class="img-fluid"></p>
 
 
 
@@ -215,7 +228,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/BlaiseKelly\.github\.io\/ECWMF_ADS\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
