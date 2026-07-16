@@ -5,20 +5,20 @@ library(sf)
 library(ecmwfr)
 
 ## define domain
-min_lon <- -25
-max_lon <- 45
+min_lon <- -5
+max_lon <- 5
 
-min_lat <- 30
-max_lat <- 72
+min_lat <- 52
+max_lat <- 56
 
 # put in format for the function
 ecmwf_land_area <- c(max_lat, min_lon, min_lat, max_lon)
 
 ##output path, don't put a / at the end or will return an error
-path_out <- "./"
+path_out <- "X:/ECMWF/ads/"
 
 ##input ecmwf user id
-api_key <- ""
+api_key <- "c95fc5f7-4e83-4e08-88ff-f02d03baa66e"
 
 wf_set_key(key = api_key)
 
@@ -53,21 +53,21 @@ variables <- c("alder_pollen",
                "sulphur_dioxide")
 
 # variable for this run
-variables <- variables[c(9,25)]
+variables <- variables[c(14,22,25)]
 
 # all the models
 models <-  c('chimere', 'dehm', 'emep','ensemble', 'euradim', 'gemaq','lotos', 'match', 'minni','mocage', 'monarch', 'silam')
 
 # which one
-models <- models[4]
+#models <- models[4]
 
 # define the year
-yrz <- c("2025")
+yrz <- c("2026")
 mnths <- sprintf("%02d", seq(1:12))
-
+mnths = 7
 ##downloads to a directory 'data' at the same level as the script is saved
-dir.create("dat/")
-path_out <- "dat/"
+#dir.create("dat/")
+#path_out <- "dat/"
 
 
 ##ECMWF data
@@ -82,7 +82,7 @@ for(v in unique(variables)){
 print(paste("getting ", v,mod,y,m))
       
       request <- list(
-        date = paste0(y, "-",m,"-01/", y, "-",m,"-31"),
+        date = paste0(y, "-",m,"-12/", y, "-",m,"-18"),
         format = "netcdf",
         variable = v,
         time = "00:00",

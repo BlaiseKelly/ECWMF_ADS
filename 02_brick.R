@@ -17,19 +17,19 @@ varz <- data.frame(ecmwf_var = c("ozone", "nitrogen_dioxide", "nitrogen_monoxide
                              "'CO'*' ('* mu*'g/m'^3*')'", "'CH'[4]*' ('* mu*'g/m'^3*')'","'PM'[2.5]*' ('* mu*'g/m'^3*')'",
                              "'PM'[10]*' ('* mu*'g/m'^3*')'","'PM'[10]*' ('* mu*'g/m'^3*')'","'NMVOC'*' ('* mu*'g/m'^3*')'"))
 
-vars <- c("nitrogen_dioxide", "pm10_wildfires")  
+vars <- c("particulate_matter_2.5um","particulate_matter_10um","pm10_wildfires")  
 
-  path = 'dat/'
-  pattern = vars[2]
+  path = 'X:/ECMWF/ads/'
+  pattern = vars
   variable = varz$formula[varz$ecmwf_var == pattern]
   write_out = FALSE
   output_crs = 4326
   
-  files_p <- list.files(path, pattern, full.names = TRUE)
+  files_p <- list.files(path, full.names = FALSE)
   files <- files_p[!grepl('metout', files_p)] ## metout files are generated as part of defualt model run
   files <- files[grepl('.nc', files)]
   ## open one file to get species
-  lefile <- nc_open(files[1])
+  lefile <- nc_open(paste0(path, files[1]))
   
   longitude <- ncvar_get(lefile, "longitude")
   latitude <- ncvar_get(lefile, "latitude")
@@ -38,7 +38,7 @@ vars <- c("nitrogen_dioxide", "pm10_wildfires")
   
   ##create min x and y
   x_min <- round(min(longitude[longitude>100])-(longitude[2]-longitude[1]),2)-360
-  x_max <- round(max(longitude[longitude<100])+(longitude[2]-longitude[1]),2)
+  x_max <- round(max(longitude[longitude>100])-(longitude[2]-longitude[1]),2)-360
   y_min <- round(min(latitude)-(latitude[2]-latitude[1]),2)
   y_max <- round(max(latitude)+(latitude[2]-latitude[1]),2)
   ##determine number of lat and lon points
@@ -60,16 +60,16 @@ vars <- c("nitrogen_dioxide", "pm10_wildfires")
     st_cast("POLYGON")
   
   nc_close(lefile)
-  rstz <- list()
+  #rstz <- list()
   for (f in files){
     
-    lefile <- nc_open(f)
+    lefile <- nc_open(paste0(path, f))
     
-    TIME <- colsplit(f, "_", c("a", "b", "c", "date"))
-    TIME <- gsub(".nc", "01 00", TIME$date, 1,-4)
-    
-    
-    d8 <- lubridate::ymd_h(TIME) + lubridate::hours(lefile$dim$time$vals)
+    fname <- colsplit(f, "_", c("a", "b", "c","d", "date"))
+    TIME_str = ncatt_get(lefile,"time")
+    TIME = gsub("FORECAST time from ","",TIME_str$long_name)
+
+    d8 = lubridate::ymd(TIME) + lubridate::hours(lefile$dim$time$vals)
     
     variable <- names(lefile$var)
     
@@ -85,14 +85,13 @@ vars <- c("nitrogen_dioxide", "pm10_wildfires")
     bb <- extent(vgt_area)
     extent(var) <- bb
     
-    
+    plot(var[[1]])
 
-    
     names(var) <- as.character(d8)
     
-    nam_out <- str_sub(TIME,1,-7)
+    nam_out <- TIME
     
-    terra::writeRaster(var, filename=paste0("bricks/", variable,"_",nam_out, ".TIF"), overwrite = TRUE)
+    terra::writeRaster(var, filename=paste0("bricks/",fname$a, "_", variable,"_",nam_out, ".TIF"), overwrite = TRUE)
     
     #rstz[[nam_out]] <- var
     
