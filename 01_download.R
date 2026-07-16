@@ -18,7 +18,7 @@ ecmwf_land_area <- c(max_lat, min_lon, min_lat, max_lon)
 path_out <- "X:/ECMWF/ads/"
 
 ##input ecmwf user id
-api_key <- "c95fc5f7-4e83-4e08-88ff-f02d03baa66e"
+api_key <- ""
 
 wf_set_key(key = api_key)
 
